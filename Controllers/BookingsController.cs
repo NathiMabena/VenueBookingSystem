@@ -49,8 +49,12 @@ namespace VenueBookingSystem.Controllers
         // GET: Bookings/Create
         public IActionResult Create()
         {
-            // NEW LOGIC: Only fetch events that have NOT passed yet!
-            var upcomingEvents = _context.Events.Where(e => e.EventDate >= DateTime.Now).ToList();
+            // Fix: Get ALL future events, regardless of whether they have a venue yet
+            // This ensures the dropdown is consistent.
+            var upcomingEvents = _context.Events
+                .Where(e => e.EventDate >= DateTime.Now)
+                .OrderBy(e => e.EventName)
+                .ToList();
 
             ViewData["EventId"] = new SelectList(upcomingEvents, "EventId", "EventName");
             return View();
@@ -71,39 +75,39 @@ namespace VenueBookingSystem.Controllers
 
                 if (linkedEvent != null)
                 {
-                    // NEW CHECK: Prevent saving if the event is in the past!
+                    // 1. Check if the event has passed
                     if (linkedEvent.EventDate < DateTime.Now)
                     {
                         ModelState.AddModelError("", "Action Denied: You cannot create a booking for an event that has already passed.");
-                        ViewData["EventId"] = new SelectList(_context.Events, "EventId", "EventName", booking.EventId);
-                        return View(booking);
                     }
-
-                    // Check if the Event actually has a venue assigned!
-                    if (linkedEvent.VenueId.HasValue)
+                    // 2. Check if the Event actually has a venue assigned
+                    else if (!linkedEvent.VenueId.HasValue)
                     {
-                        // Use .Value to safely convert the int? to an int
-                        booking.VenueId = linkedEvent.VenueId.Value;
+                        ModelState.AddModelError("", "Cannot book '" + linkedEvent.EventName + "' because it does not have a venue assigned yet. Please update the event first.");
                     }
                     else
                     {
-                        // The event has no venue! Reject the save and show an error.
-                        ModelState.AddModelError("", "Cannot book this event because it does not have a venue assigned yet. Please update the event first.");
-                        ViewData["EventId"] = new SelectList(_context.Events, "EventId", "EventName", booking.EventId);
-                        return View(booking);
+                        // All checks passed!
+                        booking.VenueId = linkedEvent.VenueId.Value;
+                        booking.BookingDate = DateTime.Now;
+
+                        _context.Add(booking);
+                        await _context.SaveChangesAsync();
+                        return RedirectToAction(nameof(Index));
                     }
                 }
-
-                booking.BookingDate = DateTime.Now;
-
-                _context.Add(booking);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["EventId"] = new SelectList(_context.Events, "EventId", "EventName", booking.EventId);
+
+            // If we are here, something failed. 
+            // IMPORTANT: Reload the EXACT SAME list as the GET method so the dropdown doesn't change!
+            var upcomingEvents = _context.Events
+                .Where(e => e.EventDate >= DateTime.Now)
+                .OrderBy(e => e.EventName)
+                .ToList();
+
+            ViewData["EventId"] = new SelectList(upcomingEvents, "EventId", "EventName", booking.EventId);
             return View(booking);
         }
-
         // GET: Bookings/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
