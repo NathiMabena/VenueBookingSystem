@@ -1,0 +1,54 @@
+﻿@model IEnumerable<VenueBookingSystem.Models.Venue>
+
+@{
+    ViewData["Title"] = "Explore Venues";
+}
+
+<div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+        <h1 class="display-5 fw-bold text-primary">Explore Venues</h1>
+        <a asp-action="Create" class="btn btn-success btn-lg shadow-sm px-4">+ Add New Venue</a>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0 rounded-4 transition-hover">
+
+                    <img src="@item.ImageUrl"
+                        
+                         class="card-img-top rounded-top-4"
+                         alt="@item.VenueName"
+                         style="height: 220px; object-fit: cover;">
+
+                    <div class="card-body bg-white p-4">
+                        <h4 class="card-title fw-bold text-dark mb-1">@item.VenueName</h4>
+                        <p class="text-muted mb-3">@item.Location</p>
+
+                        <p class="card-text mb-0">
+                            <strong class="text-dark">Capacity:</strong> @item.Capacity guests
+                        </p>
+                    </div>
+
+                    <div class="card-footer bg-white border-top-0 pt-0 pb-4 text-center">
+                        <a asp-action="Edit" asp-route-id="@item.VenueId" class="btn btn-outline-primary btn-sm px-3 mx-1">Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.VenueId" class="btn btn-outline-info btn-sm px-3 mx-1">Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.VenueId" class="btn btn-outline-danger btn-sm px-3 mx-1">Delete</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .transition-hover {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+        .transition-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+        }
+</style>

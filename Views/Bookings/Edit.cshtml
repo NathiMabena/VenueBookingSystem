@@ -1,0 +1,47 @@
+﻿@model VenueBookingSystem.Models.Booking
+
+@{
+    ViewData["Title"] = "Edit Booking";
+}
+
+<div class="container mt-5 mb-5 d-flex justify-content-center">
+    <div class="col-md-8 col-lg-6">
+
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+            <div class="card-header bg-warning text-dark text-center py-4 border-0">
+                <h2 class="fw-bold mb-0">Edit Booking</h2>
+                <p class="mb-0 text-muted">Update reservation details</p>
+            </div>
+
+            <div class="card-body p-4 p-md-5 bg-white">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                    <input type="hidden" asp-for="BookingId" />
+                    <input type="hidden" asp-for="BookingDate" />
+
+                    <div class="form-floating mb-3">
+                        <select asp-for="EventId" class="form-select rounded-3" asp-items="ViewBag.EventId"></select>
+                        <label asp-for="EventId" class="text-muted">Event</label>
+                    </div>
+                    <input type="hidden" asp-for="BookingDate" />
+
+                    <div class="form-floating mb-4">
+                        <input class="form-control rounded-3" value="@Model.BookingDate.ToString("f")" disabled />
+                        <label class="text-muted">Date Placed (System Locked)</label>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <input type="submit" value="Save Changes" class="btn btn-warning btn-lg rounded-pill fw-bold" />
+                        <a asp-action="Index" class="btn btn-light btn-lg rounded-pill text-muted mt-2">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Welcome";
+    ViewData["HideNavbar"] = true; // Hides the navbar
+}
+
+<style>
+    /* 1. We apply the background directly to the body so it stretches edge-to-edge */
+    body {
+        /* The dark linear-gradient acts as a shadow overlay so the white and pink text stays readable! */
+        background-image: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.95)), url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1920&q=80');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+    }
+
+    /* 2. Your custom glowing pink button */
+    .btn-pink {
+        background-color: #FF1493;
+        border-color: #FF1493;
+        color: #ffffff;
+        transition: all 0.2s ease-in-out;
+    }
+
+        .btn-pink:hover {
+            background-color: #D11076;
+            border-color: #D11076;
+            color: #ffffff !important;
+            transform: translateY(-3px);
+            box-shadow: 0 .5rem 1.5rem rgba(255, 20, 147, 0.5) !important;
+        }
+</style>
+
+<div class="d-flex flex-column justify-content-center align-items-center w-100 mt-5 pt-5" style="min-height: 75vh;">
+
+    <div class="text-center px-4">
+        <h1 class="display-2 fw-bold text-white mb-3">
+            Welcome to <span style="color: #FF1493;">Venue Booking</span>
+        </h1>
+
+        <p class="lead text-white-50 mb-5 fs-4">
+            The ultimate platform for managing your venues, events, and bookings.
+        </p>
+
+        <a asp-controller="Home" asp-action="Explore" class="btn btn-pink btn-lg px-5 py-3 rounded-pill shadow fs-5 fw-bold">
+            Start Exploring
+        </a>
+    </div>
+
+</div>
+
+<div class="fixed-bottom text-center pb-4 w-100">
+    <hr class="w-50 mx-auto border-secondary mb-3" />
+    <p class="text-white-50 small mb-0">
+        &copy; 2026 - EventEase - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-white-50 text-decoration-none hover-underline">Privacy Policy</a>
+    </p>
+</div>

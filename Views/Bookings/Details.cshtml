@@ -1,0 +1,43 @@
+﻿@model VenueBookingSystem.Models.Booking
+
+@{
+    ViewData["Title"] = "Booking Details";
+}
+
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="col-md-8">
+
+        <div class="card shadow border-0 rounded-4 border-start border-info border-5">
+            <div class="card-header bg-light border-bottom-0 py-4 text-center">
+                <span class="badge bg-info text-dark rounded-pill px-3 py-2 mb-2">Confirmed Reservation</span>
+                <h2 class="fw-bold text-dark mb-0">Booking #@Model.BookingId.ToString("D4")</h2>
+            </div>
+
+            <div class="card-body p-5 bg-white">
+                <dl class="row mb-0 fs-5">
+
+                    <dt class="col-sm-4 text-muted">Linked Event</dt>
+                    <dd class="col-sm-8 fw-bold text-primary">@(Model.Event?.EventName ?? "Unknown Event")</dd>
+                    <dt class="col-sm-4 text-muted mt-3">Date of Event</dt>
+                    <dd class="col-sm-8 mt-3 fw-bold text-success">
+                        <i class="bi bi-calendar-event"></i> @(Model.Event?.EventDate.ToString("f") ?? "Unknown Date")
+                    </dd>
+
+                    <dt class="col-sm-4 text-muted mt-3">Assigned Venue</dt>
+                    <dd class="col-sm-8 mt-3">
+                        <i class="bi bi-geo-alt-fill text-danger"></i> @(Model.Venue?.VenueName ?? "Unknown Venue")
+                    </dd>
+
+                    <dt class="col-sm-4 text-muted mt-4">Date Placed</dt>
+                    <dd class="col-sm-8 mt-4 fw-semibold">@Model.BookingDate.ToString("f")</dd>
+                </dl>
+            </div>
+
+            <div class="card-footer bg-light border-top text-center py-4">
+                <a asp-action="Edit" asp-route-id="@Model?.BookingId" class="btn btn-warning btn-lg rounded-pill px-4 mx-2 fw-bold text-dark">Edit Booking</a>
+                <a asp-action="Index" class="btn btn-outline-secondary btn-lg rounded-pill px-4 mx-2">Back to List</a>
+            </div>
+        </div>
+
+    </div>
+</div>

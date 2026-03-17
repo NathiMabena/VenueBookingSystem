@@ -1,0 +1,61 @@
+﻿@model IEnumerable<VenueBookingSystem.Models.Booking>
+
+@{
+    ViewData["Title"] = "Manage Bookings";
+}
+
+<div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+        <h1 class="display-5 fw-bold text-info"><i class="bi bi-ticket-perforated"></i> Client Bookings</h1>
+        <a asp-action="Create" class="btn btn-info text-white btn-lg shadow-sm rounded-pill px-4">+ New Booking</a>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0 border-start border-info border-5 rounded-4 transition-hover">
+                    <div class="card-body">
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="badge bg-info text-dark rounded-pill px-3 py-2">Confirmed</span>
+                            <small class="text-muted fw-bold">ID: #@item.BookingId.ToString("D4")</small>
+                        </div>
+
+                        <h5 class="card-title fw-bold mb-1">
+                            @(item.Event != null ? item.Event.EventName : "Unknown Event")
+                        </h5>
+
+                        <p class="text-muted small mb-3">
+                            <i class="bi bi-geo-alt-fill text-danger"></i>
+                            @(item.Venue != null ? item.Venue.VenueName : "Venue Pending")
+                        </p>
+
+                        <div class="bg-light p-3 rounded-3 mb-3">
+                            <h6 class="mb-1 text-muted small text-uppercase fw-bold">Booking Placed On</h6>
+                            <p class="mb-0 fw-semibold">@item.BookingDate.ToString("f")</p>
+                        </div>
+
+                    </div>
+
+                    <div class="card-footer bg-white border-top-0 pt-0 pb-3 text-center">
+                        <a asp-action="Edit" asp-route-id="@item.BookingId" class="btn btn-outline-secondary btn-sm rounded-pill px-3">Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.BookingId" class="btn btn-outline-info btn-sm rounded-pill px-3 mx-1">Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.BookingId" class="btn btn-outline-danger btn-sm rounded-pill px-3">Delete</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .transition-hover {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    }
+
+        .transition-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important;
+        }
+</style>

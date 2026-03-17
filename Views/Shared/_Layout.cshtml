@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - VenueBookingSystem</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/VenueBookingSystem.styles.css" asp-append-version="true" />
+</head>
+<body>
+    @if (ViewData["HideNavbar"] as bool? != true)
+    {
+        // This tiny C# snippet figures out which page we are currently looking at!
+        var currentController = ViewContext.RouteData.Values["Controller"]?.ToString();
+
+        <style>
+            /* Used Gemini UI as inspiration for this navbar design, with a clean white background and subtle hover effects. */
+            .airbnb-nav {
+                background-color: #ffffff;
+            }
+
+                .airbnb-nav .nav-link {
+                    color: #717171 !important;
+                    font-weight: 500;
+                    padding: 10px 15px 15px 15px;
+                    border-bottom: 2px solid transparent;
+                    transition: color 0.2s, border-bottom 0.2s;
+                }
+
+                    .airbnb-nav .nav-link:hover {
+                        color: #222222 !important;
+                        border-bottom: 2px solid #dddddd;
+                    }
+
+                .airbnb-nav .active-tab {
+                    color: #222222 !important;
+                    font-weight: 600;
+                    border-bottom: 2px solid #222222 !important;
+                }
+        </style>
+
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-light border-bottom airbnb-nav pt-3 pb-0">
+                <div class="container-fluid px-4">
+
+                    <a class="navbar-brand fw-bold fs-4" style="width: 150px; color: #FF1493;" asp-area="" asp-controller="Home" asp-action="Index">
+                        <i class="bi bi-building"></i> EventEase
+                    </a>
+
+                    <button class="navbar-toggler mb-2" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-center">
+                        <ul class="navbar-nav mx-auto gap-3">
+
+                            <li class="nav-item">
+                                <a class="nav-link d-flex flex-column align-items-center @(currentController == "Home" ? "active-tab" : "")" asp-area="" asp-controller="Home" asp-action="Explore">
+                                    <span class="fs-5 mb-1">🏠</span> Home
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex flex-column align-items-center @(currentController == "Venues" ? "active-tab" : "")" asp-area="" asp-controller="Venues" asp-action="Index">
+                                    <span class="fs-5 mb-1">🏢</span> Venues
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex flex-column align-items-center @(currentController == "Events" ? "active-tab" : "")" asp-area="" asp-controller="Events" asp-action="Index">
+                                    <span class="fs-5 mb-1">📅</span> Events
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex flex-column align-items-center @(currentController == "Bookings" ? "active-tab" : "")" asp-area="" asp-controller="Bookings" asp-action="Index">
+                                    <span class="fs-5 mb-1">🎟️</span> Bookings
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                    <div class="d-none d-lg-block" style="width: 150px;"></div>
+
+                </div>
+            </nav>
+        </header>
+    }
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <div class="fixed-bottom text-center pb-4">
+        <hr class="w-50 mx-auto text-muted mb-3" /> <p class="text-muted small mb-0">
+            &copy; 2026 - EventEase - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-muted text-decoration-none hover-underline">Privacy Policy</a>
+        </p>
+    </div>
+
+   
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
