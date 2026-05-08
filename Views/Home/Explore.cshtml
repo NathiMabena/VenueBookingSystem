@@ -4,7 +4,8 @@
 
 <div class="container mt-5">
     <div class="text-center mb-5">
-        <h2 class="display-5 fw-bold">What would you like to manage today?</h2>
+        <h2 class="display-5 fw-bold">
+            What would you like to manage <span class="glow-pink">today?</span></h2>
         <p class="text-muted text-uppercase tracking-wide">Select a category below</p>
     </div>
 
@@ -45,3 +46,22 @@
 
     </div>
 </div>
+<style>
+    .glow-pink {
+        /* A light pink base color so the text remains readable */
+        color: #ffb3d9;
+        /* The glowing animation */
+        animation: neon-pulse 1.5s infinite alternate;
+    }
+
+    /* Use double @@ so Razor doesn't confuse it with C# */
+    @@keyframes neon-pulse {
+        from {
+            text-shadow: 0 0 5px #ff1493, 0 0 10px #ff1493, 0 0 20px #ff1493;
+        }
+
+        to {
+            text-shadow: 0 0 5px #ff1493, 0 0 10px #ff1493, 0 0 20px #ff1493, 0 0 30px #ff1493, 0 0 40px #ff1493;
+        }
+    }
+</style>

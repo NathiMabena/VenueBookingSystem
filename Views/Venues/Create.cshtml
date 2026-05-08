@@ -1,47 +1,36 @@
 ﻿@model VenueBookingSystem.Models.Venue
-
 @{
     ViewData["Title"] = "Add New Venue";
 }
-
 <div class="container mt-5 mb-5 d-flex justify-content-center">
     <div class="col-md-8 col-lg-6">
-
         <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
-
             <div class="card-header bg-primary text-white text-center py-4 border-0">
                 <h2 class="fw-bold mb-0">Add New Venue</h2>
                 <p class="mb-0 text-white-50">Enter the property details below</p>
             </div>
-
             <div class="card-body p-4 p-md-5 bg-white">
-                <form asp-action="Create">
-                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
+                <form asp-action="Create" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
                     <div class="form-floating mb-3">
                         <input asp-for="VenueName" class="form-control rounded-3" placeholder="Venue Name" />
-                        <label asp-for="VenueName" class="text-muted">Venue Name</label>
+                        <label asp-for="VenueName">Venue Name</label>
                         <span asp-validation-for="VenueName" class="text-danger small"></span>
                     </div>
-
                     <div class="form-floating mb-3">
                         <input asp-for="Location" class="form-control rounded-3" placeholder="Location" />
-                        <label asp-for="Location" class="text-muted">Location / Address</label>
+                        <label asp-for="Location">Location / Address</label>
                         <span asp-validation-for="Location" class="text-danger small"></span>
                     </div>
-
                     <div class="form-floating mb-3">
                         <input asp-for="Capacity" class="form-control rounded-3" placeholder="Capacity" />
-                        <label asp-for="Capacity" class="text-muted">Maximum Capacity</label>
+                        <label asp-for="Capacity">Maximum Capacity</label>
                         <span asp-validation-for="Capacity" class="text-danger small"></span>
                     </div>
-
-                    <div class="form-floating mb-4">
-                        <input asp-for="ImageUrl" class="form-control rounded-3" placeholder="Image URL" />
-                        <label asp-for="ImageUrl" class="text-muted">Image URL (Placeholder link)</label>
-                        <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Upload Venue Image (Optional)</label>
+                        <input type="file" name="imageFile" class="form-control rounded-3" accept="image/*" />
                     </div>
-
                     <div class="d-grid gap-2">
                         <input type="submit" value="Save Venue" class="btn btn-primary btn-lg rounded-pill fw-bold" />
                         <a asp-action="Index" class="btn btn-light btn-lg rounded-pill text-muted mt-2">Cancel</a>
@@ -49,10 +38,8 @@
                 </form>
             </div>
         </div>
-
     </div>
 </div>
-
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

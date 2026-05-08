@@ -1,36 +1,27 @@
 ﻿@model VenueBookingSystem.Models.Venue
-
 @{
     ViewData["Title"] = "Venue Details";
 }
-
 <div class="container mt-5 d-flex justify-content-center mb-5">
     <div class="col-md-8">
-
         <div class="card shadow border-0 rounded-4 overflow-hidden">
-            <img src="@Model.ImageUrl"
-                 
+            <img src="@(Model.ImageUrl ?? "https://via.placeholder.com/400x200?text=No+Image")"
                  class="card-img-top"
                  style="height: 300px; object-fit: cover;"
                  alt="@Model.VenueName">
-
             <div class="card-body p-5">
                 <h2 class="fw-bold text-primary mb-1">@Model.VenueName</h2>
                 <p class="text-muted mb-4 fs-5"><i class="bi bi-geo-alt-fill text-danger"></i> @Model.Location</p>
-
                 <hr class="text-muted opacity-25" />
-
                 <dl class="row mb-0 fs-5 mt-4">
                     <dt class="col-sm-4 text-muted">Maximum Capacity</dt>
                     <dd class="col-sm-8 fw-semibold">@Model.Capacity guests</dd>
                 </dl>
             </div>
-
             <div class="card-footer bg-light border-top text-center py-4">
-                <a asp-action="Edit" asp-route-id="@Model?.VenueId" class="btn btn-warning btn-lg rounded-pill px-4 mx-2 fw-bold text-dark">Edit Venue</a>
+                <a asp-action="Edit" asp-route-id="@Model.VenueId" class="btn btn-warning btn-lg rounded-pill px-4 mx-2 fw-bold text-dark">Edit Venue</a>
                 <a asp-action="Index" class="btn btn-outline-secondary btn-lg rounded-pill px-4 mx-2">Back to List</a>
             </div>
         </div>
-
     </div>
 </div>

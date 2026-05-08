@@ -1,50 +1,50 @@
 ﻿@model VenueBookingSystem.Models.Event
-
 @{
     ViewData["Title"] = "Edit Event";
 }
-
 <div class="container mt-5 mb-5 d-flex justify-content-center">
     <div class="col-md-8 col-lg-6">
-
         <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
             <div class="card-header bg-warning text-dark text-center py-4 border-0">
                 <h2 class="fw-bold mb-0">Edit Event</h2>
                 <p class="mb-0 text-muted">Update the event details below</p>
             </div>
-
             <div class="card-body p-4 p-md-5 bg-white">
-                <form asp-action="Edit">
-                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
+                <form asp-action="Edit" enctype="multipart/form-data">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
                     <input type="hidden" asp-for="EventId" />
-
                     <div class="form-floating mb-3">
                         <input asp-for="EventName" class="form-control rounded-3" placeholder="Event Name" />
-                        <label asp-for="EventName" class="text-muted">Event Name</label>
+                        <label asp-for="EventName">Event Name</label>
                         <span asp-validation-for="EventName" class="text-danger small"></span>
                     </div>
-
                     <div class="form-floating mb-3">
                         <input asp-for="EventDate" class="form-control rounded-3" placeholder="Event Date" />
-                        <label asp-for="EventDate" class="text-muted">Date & Time</label>
+                        <label asp-for="EventDate">Date & Time</label>
                         <span asp-validation-for="EventDate" class="text-danger small"></span>
                     </div>
-
                     <div class="form-floating mb-3">
                         <textarea asp-for="Description" class="form-control rounded-3" placeholder="Description" style="height: 100px"></textarea>
-                        <label asp-for="Description" class="text-muted">Description</label>
+                        <label asp-for="Description">Description</label>
                         <span asp-validation-for="Description" class="text-danger small"></span>
                     </div>
-
-                    <div class="form-floating mb-4">
+                    <div class="form-floating mb-3">
                         <select asp-for="VenueId" class="form-select rounded-3" asp-items="ViewBag.VenueId">
-                            <option value="">-- Select a Venue (Pending) --</option>
+                            <option value="">-- Select a Venue (Optional) --</option>
                         </select>
-                        <label asp-for="VenueId" class="text-muted">Assigned Venue</label>
-                        <span asp-validation-for="VenueId" class="text-danger small"></span>
+                        <label asp-for="VenueId">Assigned Venue</label>
                     </div>
-
+                    <div class="mb-4 bg-light p-3 rounded-3 border">
+                        <label class="form-label fw-semibold text-dark">Update Event Image (Optional)</label>
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                        {
+                            <div class="mb-3 d-flex align-items-center">
+                                <img src="@Model.ImageUrl" style="height: 60px; width: 90px; object-fit: cover;" class="rounded-2 shadow-sm me-3" alt="Current Event Image" />
+                                <small class="text-muted">Current event image. Uploading a new one will replace it.</small>
+                            </div>
+                        }
+                        <input type="file" name="imageFile" class="form-control" accept="image/*" />
+                    </div>
                     <div class="d-grid gap-2">
                         <input type="submit" value="Save Changes" class="btn btn-warning btn-lg rounded-pill fw-bold" />
                         <a asp-action="Index" class="btn btn-light btn-lg rounded-pill text-muted mt-2">Cancel</a>
@@ -54,7 +54,6 @@
         </div>
     </div>
 </div>
-
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

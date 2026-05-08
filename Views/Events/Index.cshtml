@@ -1,11 +1,8 @@
 ﻿@model IEnumerable<VenueBookingSystem.Models.Event>
-
 @{
     ViewData["Title"] = "Upcoming Events";
 }
-
 <div class="container mt-4 mb-5">
-
     @if (TempData["ErrorMessage"] != null)
     {
         <div class="alert alert-danger shadow-sm border-0 border-start border-danger border-5 mb-4" role="alert">
@@ -13,12 +10,10 @@
             <p class="mb-0">@TempData["ErrorMessage"]</p>
         </div>
     }
-
     <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
         <h1 class="display-5 fw-bold text-primary"><i class="bi bi-calendar-event"></i> Upcoming Events</h1>
         <a asp-action="Create" class="btn btn-primary btn-lg shadow-sm rounded-pill px-4">+ Create Event</a>
     </div>
-
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         @foreach (var item in Model)
         {
@@ -26,19 +21,27 @@
                 <div class="card h-100 shadow-sm border-0 rounded-4 transition-hover">
 
                     @{
-                        bool isPast = item.EventDate < DateTime.Now;
-                        string headerBg = isPast ? "bg-secondary opacity-75" : "bg-gradient bg-primary";
+                        var displayImage =
+                        !string.IsNullOrWhiteSpace(item.ImageUrl) ? item.ImageUrl :
+                        !string.IsNullOrWhiteSpace(item.Venue?.ImageUrl) ? item.Venue.ImageUrl :
+                        "https://via.placeholder.com/400x200?text=No+Image";
                     }
+                    <img src="@displayImage"
+                         class="card-img-top rounded-top-4"
+                         alt="@item.EventName"
+                         style="height: 200px; object-fit: cover;">
 
-                    <div class="card-header @headerBg text-white border-0 py-3 rounded-top-4 position-relative">
+                    @{
+                        bool isPast = item.EventDate < DateTime.Now;
+                        string headerBg = isPast ? "bg-secondary opacity-75" : "bg-primary";
+                    }
+                    <div class="card-header @headerBg text-white border-0 py-3 position-relative">
                         <h4 class="card-title fw-bold mb-0 text-truncate" style="padding-right: 60px;" title="@item.EventName">@item.EventName</h4>
-
                         @if (isPast)
                         {
                             <span class="badge bg-dark shadow-sm position-absolute top-50 end-0 translate-middle-y me-3">Passed</span>
                         }
                     </div>
-
                     <div class="card-body bg-light">
                         <div class="d-flex align-items-center mb-3">
                             <div class="bg-white text-primary rounded-3 p-2 shadow-sm text-center me-3" style="min-width: 60px;">
@@ -50,13 +53,10 @@
                                 <p class="mb-0 fw-semibold">@item.EventDate.ToString("hh:mm tt")</p>
                             </div>
                         </div>
-
                         <p class="card-text text-muted mb-3" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
                             @item.Description
                         </p>
-
                         <hr class="text-muted opacity-25" />
-
                         <p class="card-text">
                             <strong><i class="bi bi-geo-alt-fill text-danger"></i> Venue:</strong>
                             @if (item.Venue != null)
@@ -69,7 +69,6 @@
                             }
                         </p>
                     </div>
-
                     <div class="card-footer bg-white border-top-0 pt-0 pb-3 text-center">
                         @if (!isPast)
                         {
@@ -83,7 +82,6 @@
         }
     </div>
 </div>
-
 <style>
     .transition-hover {
         transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
