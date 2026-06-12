@@ -17,6 +17,15 @@
                         <label asp-for="EventName">Event Name</label>
                         <span asp-validation-for="EventName" class="text-danger small"></span>
                     </div>
+
+                    <div class="form-floating mb-3">
+                        <select asp-for="EventTypeId" class="form-select rounded-3" asp-items="ViewBag.EventTypeId">
+                            <option value="">-- Select an Event Type --</option>
+                        </select>
+                        <label asp-for="EventTypeId">Event Type</label>
+                        <span asp-validation-for="EventTypeId" class="text-danger small"></span>
+                    </div>
+
                     <div class="form-floating mb-3">
                         <input asp-for="EventDate" class="form-control rounded-3" placeholder="Event Date" />
                         <label asp-for="EventDate">Date & Time</label>

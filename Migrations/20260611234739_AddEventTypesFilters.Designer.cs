@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VenueBookingSystem.Data;
 
@@ -11,9 +12,11 @@ using VenueBookingSystem.Data;
 namespace VenueBookingSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260611234739_AddEventTypesFilters")]
+    partial class AddEventTypesFilters
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,9 +72,6 @@ namespace VenueBookingSystem.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("EventTypeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ImageUrl")
                         .HasMaxLength(120)
                         .HasColumnType("nvarchar(120)");
@@ -80,8 +80,6 @@ namespace VenueBookingSystem.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("EventId");
-
-                    b.HasIndex("EventTypeId");
 
                     b.HasIndex("VenueId");
 
@@ -138,12 +136,12 @@ namespace VenueBookingSystem.Migrations
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
 
+                    b.Property<int?>("EventTypeId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ImageUrl")
                         .HasMaxLength(120)
                         .HasColumnType("nvarchar(120)");
-
-                    b.Property<bool>("IsAvailable")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Location")
                         .IsRequired()
@@ -156,6 +154,8 @@ namespace VenueBookingSystem.Migrations
                         .HasColumnType("nvarchar(80)");
 
                     b.HasKey("VenueId");
+
+                    b.HasIndex("EventTypeId");
 
                     b.ToTable("Venues");
                 });
@@ -181,17 +181,20 @@ namespace VenueBookingSystem.Migrations
 
             modelBuilder.Entity("VenueBookingSystem.Models.Event", b =>
                 {
-                    b.HasOne("VenueBookingSystem.Models.EventType", "EventType")
-                        .WithMany()
-                        .HasForeignKey("EventTypeId");
-
                     b.HasOne("VenueBookingSystem.Models.Venue", "Venue")
                         .WithMany("Events")
                         .HasForeignKey("VenueId");
 
-                    b.Navigation("EventType");
-
                     b.Navigation("Venue");
+                });
+
+            modelBuilder.Entity("VenueBookingSystem.Models.Venue", b =>
+                {
+                    b.HasOne("VenueBookingSystem.Models.EventType", "EventType")
+                        .WithMany()
+                        .HasForeignKey("EventTypeId");
+
+                    b.Navigation("EventType");
                 });
 
             modelBuilder.Entity("VenueBookingSystem.Models.Event", b =>

@@ -2,39 +2,53 @@
 
 @{
     ViewData["Title"] = "Edit Booking";
+    bool hasPassed = Model.Event != null && Model.Event.EventDate < DateTime.Now;
 }
 
 <div class="container mt-5 mb-5 d-flex justify-content-center">
     <div class="col-md-8 col-lg-6">
 
         <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
-            <div class="card-header bg-warning text-dark text-center py-4 border-0">
+            <div class="card-header @(hasPassed ? "bg-secondary text-white" : "bg-warning text-dark") text-center py-4 border-0">
                 <h2 class="fw-bold mb-0">Edit Booking</h2>
-                <p class="mb-0 text-muted">Update reservation details</p>
+                <p class="mb-0 @(hasPassed ? "text-light" : "text-muted")">Update reservation details</p>
             </div>
 
             <div class="card-body p-4 p-md-5 bg-white">
-                <form asp-action="Edit">
-                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-                    <input type="hidden" asp-for="BookingId" />
-                    <input type="hidden" asp-for="BookingDate" />
 
-                    <div class="form-floating mb-3">
-                        <select asp-for="EventId" class="form-select rounded-3" asp-items="ViewBag.EventId"></select>
-                        <label asp-for="EventId" class="text-muted">Event</label>
+                @if (hasPassed)
+                {
+                    <div class="text-center py-4">
+                        <i class="bi bi-lock-fill text-secondary" style="font-size: 4rem;"></i>
+                        <h3 class="fw-bold mt-3 text-dark">Record Locked</h3>
+                        <p class="text-muted fs-5">This event has already taken place. Historical bookings cannot be modified to preserve data integrity.</p>
+                        <a asp-action="Index" class="btn btn-outline-secondary btn-lg rounded-pill px-5 mt-3">Return to Bookings</a>
                     </div>
-                    <input type="hidden" asp-for="BookingDate" />
+                }
+                else
+                {
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <input type="hidden" asp-for="BookingId" />
+                        <input type="hidden" asp-for="BookingDate" />
 
-                    <div class="form-floating mb-4">
-                        <input class="form-control rounded-3" value="@Model.BookingDate.ToString("f")" disabled />
-                        <label class="text-muted">Date Placed (System Locked)</label>
-                    </div>
+                        <div class="form-floating mb-3">
+                            <select asp-for="EventId" class="form-select rounded-3" asp-items="ViewBag.EventId"></select>
+                            <label asp-for="EventId" class="text-muted">Event</label>
+                        </div>
 
-                    <div class="d-grid gap-2">
-                        <input type="submit" value="Save Changes" class="btn btn-warning btn-lg rounded-pill fw-bold" />
-                        <a asp-action="Index" class="btn btn-light btn-lg rounded-pill text-muted mt-2">Cancel</a>
-                    </div>
-                </form>
+                        <div class="form-floating mb-4">
+                            <input class="form-control rounded-3" value="@Model.BookingDate.ToString("f")" disabled />
+                            <label class="text-muted">Date Placed (System Locked)</label>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <input type="submit" value="Save Changes" class="btn btn-warning btn-lg rounded-pill fw-bold" />
+                            <a asp-action="Index" class="btn btn-light btn-lg rounded-pill text-muted mt-2">Cancel</a>
+                        </div>
+                    </form>
+                }
+
             </div>
         </div>
     </div>

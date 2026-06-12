@@ -15,22 +15,52 @@ namespace VenueBookingSystem.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string searchString, int? eventTypeId, DateTime? startDate, DateTime? endDate, bool? isAvailable)
         {
+            // Pass the predefined categories to the View for the dropdown menu
+            ViewData["EventTypes"] = new SelectList(_context.EventTypes, "EventTypeId", "TypeName", eventTypeId);
+
+            // Start with the base query, including our new EventType table
             var bookings = _context.Bookings
                 .Include(b => b.Event)
+                    .ThenInclude(e => e.EventType)
                 .Include(b => b.Venue)
                 .AsQueryable();
 
+            // 1. Text Search Filter (Booking ID or Event Name)
             if (!string.IsNullOrEmpty(searchString))
             {
-                bool isId = int.TryParse(searchString, out int searchId);
-                bookings = bookings.Where(b =>
-                    (isId && b.BookingId == searchId) ||
-                    b.Event.EventName.Contains(searchString));
+                bookings = bookings.Where(b => b.Event.EventName.Contains(searchString) || b.BookingId.ToString() == searchString);
             }
 
+            // 2. Event Type Filter
+            if (eventTypeId.HasValue)
+            {
+                bookings = bookings.Where(b => b.Event.EventTypeId == eventTypeId);
+            }
+
+            // 3. Date Range Filters
+            if (startDate.HasValue)
+            {
+                bookings = bookings.Where(b => b.Event.EventDate >= startDate.Value);
+            }
+            if (endDate.HasValue)
+            {
+                bookings = bookings.Where(b => b.Event.EventDate <= endDate.Value);
+            }
+
+            // 4. Venue Availability Filter
+            if (isAvailable.HasValue)
+            {
+                bookings = bookings.Where(b => b.Venue.IsAvailable == isAvailable.Value);
+            }
+
+            // Save the current filter states so the UI remembers what the user selected
             ViewData["CurrentFilter"] = searchString;
+            ViewData["CurrentStartDate"] = startDate?.ToString("yyyy-MM-dd");
+            ViewData["CurrentEndDate"] = endDate?.ToString("yyyy-MM-dd");
+            ViewData["CurrentAvailability"] = isAvailable;
+
             return View(await bookings.ToListAsync());
         }
 

@@ -27,6 +27,10 @@ namespace VenueBookingSystem.Models
         [StringLength(120)]
         public string? ImageUrl { get; set; }
 
+        [Display(Name = "Event Type")]
+        public int? EventTypeId { get; set; }
+        public EventType? EventType { get; set; }
+
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
     }
 }

@@ -9,37 +9,83 @@
     </div>
 
     <form asp-action="Index" method="get" class="mb-5 mt-4">
-        <div class="search-bar-wrapper shadow rounded-pill bg-white d-flex align-items-center p-2 mx-auto" style="max-width: 600px; border: 1px solid #ebebeb;">
+        <div class="search-bar-wrapper shadow rounded-pill bg-white d-flex align-items-center p-2 mx-auto" style="max-width: 900px; border: 1px solid #ebebeb;">
 
-            <div class="search-segment px-4 py-1 flex-grow-1 d-flex flex-column justify-content-center" style="border-radius: 50px;">
+            <div class="search-segment px-3 py-1 flex-grow-1 d-flex flex-column justify-content-center" style="border-radius: 50px;">
                 <label for="searchString" class="fw-bold text-dark mb-0" style="font-size: 0.9rem; cursor:pointer;">What</label>
                 <input type="text" id="searchString" name="searchString" value="@ViewData["CurrentFilter"]"
                        class="form-control p-0 border-0 bg-transparent shadow-none text-muted custom-search-input"
                        style="font-size: 0.85rem;"
-                       placeholder="Event name or Booking ID..." autocomplete="off" />
+                       placeholder="Event name or ID..." autocomplete="off" />
             </div>
 
-            <button type="submit" class="btn btn-airbnb-search rounded-circle border-0 d-flex justify-content-center align-items-center shadow-sm">
+            <div class="search-divider"></div>
+
+            <div class="search-segment px-3 py-1 flex-grow-1 d-flex flex-column justify-content-center" style="border-radius: 50px;">
+                <label for="eventTypeId" class="fw-bold text-dark mb-0" style="font-size: 0.9rem; cursor:pointer;">Type</label>
+                <select id="eventTypeId" name="eventTypeId" class="form-control p-0 border-0 bg-transparent shadow-none text-muted custom-search-input" style="font-size: 0.85rem; appearance: none;" asp-items="ViewBag.EventTypes">
+                    <option value="">All Categories</option>
+                </select>
+            </div>
+
+            <div class="search-divider"></div>
+
+            <div class="search-segment px-3 py-1 flex-grow-1 d-flex flex-column justify-content-center" style="border-radius: 50px;">
+                <label for="startDate" class="fw-bold text-dark mb-0" style="font-size: 0.9rem; cursor:pointer;">From</label>
+                <input type="date" id="startDate" name="startDate" value="@ViewData["CurrentStartDate"]"
+                       class="form-control p-0 border-0 bg-transparent shadow-none text-muted custom-search-input"
+                       style="font-size: 0.85rem;" />
+            </div>
+
+            <div class="search-divider"></div>
+
+            <div class="search-segment px-3 py-1 flex-grow-1 d-flex flex-column justify-content-center" style="border-radius: 50px;">
+                <label for="endDate" class="fw-bold text-dark mb-0" style="font-size: 0.9rem; cursor:pointer;">To</label>
+                <input type="date" id="endDate" name="endDate" value="@ViewData["CurrentEndDate"]"
+                       class="form-control p-0 border-0 bg-transparent shadow-none text-muted custom-search-input"
+                       style="font-size: 0.85rem;" />
+            </div>
+
+            <button type="submit" class="btn btn-airbnb-search rounded-circle border-0 d-flex justify-content-center align-items-center shadow-sm ms-1">
                 <i class="bi bi-search text-white fw-bold fs-5"></i>
             </button>
 
-            @if (!string.IsNullOrEmpty(ViewData["CurrentFilter"]?.ToString()))
+            @if (ViewData["CurrentFilter"] != null || ViewData["CurrentStartDate"] != null || ViewData["CurrentEndDate"] != null || ViewData["CurrentAvailability"] as bool? == true)
             {
-                <a asp-action="Index" class="btn btn-light rounded-circle ms-2 d-flex justify-content-center align-items-center shadow-sm" style="width: 50px; height: 50px; background-color: #f4f4f4;" title="Clear Search">
+                <a asp-action="Index" class="btn btn-light rounded-circle ms-2 d-flex justify-content-center align-items-center shadow-sm" style="width: 50px; height: 50px; background-color: #f4f4f4;" title="Clear Filters">
                     <i class="bi bi-x-lg text-secondary fw-bold fs-5"></i>
                 </a>
             }
+        </div>
+
+        <div class="text-center mt-3">
+            <div class="form-check form-switch d-inline-block text-start">
+                <input class="form-check-input" type="checkbox" role="switch" id="isAvailable" name="isAvailable" value="true" onchange="this.form.submit()" @(ViewData["CurrentAvailability"] as bool? == true ? "checked" : "")>
+                <label class="form-check-label small fw-bold text-muted ms-1" for="isAvailable">Only show bookings at currently available venues</label>
+            </div>
         </div>
     </form>
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         @foreach (var item in Model)
         {
+            // Check if the event date is in the past
+            bool hasPassed = item.Event != null && item.Event.EventDate < DateTime.Now;
+
             <div class="col">
-                <div class="card h-100 shadow-sm border-0 border-start border-info border-5 rounded-4 transition-hover">
+                <div class="card h-100 shadow-sm border-0 border-start @(hasPassed ? "border-secondary opacity-75" : "border-info") border-5 rounded-4 transition-hover">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span class="badge bg-info text-dark rounded-pill px-3 py-2">Confirmed</span>
+
+                            @if (hasPassed)
+                            {
+                                <span class="badge bg-secondary text-white rounded-pill px-3 py-2"><i class="bi bi-clock-history me-1"></i>Completed</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-info text-dark rounded-pill px-3 py-2"><i class="bi bi-check-circle me-1"></i>Confirmed</span>
+                            }
+
                             <small class="text-muted fw-bold">ID: #@item.BookingId.ToString("D4")</small>
                         </div>
                         <h5 class="card-title fw-bold mb-1">
@@ -59,9 +105,17 @@
                         </div>
                     </div>
                     <div class="card-footer bg-white border-top-0 pt-0 pb-3 text-center">
-                        <a asp-action="Edit" asp-route-id="@item.BookingId" class="btn btn-outline-secondary btn-sm rounded-pill px-3">Edit</a>
+                        @if (!hasPassed)
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.BookingId" class="btn btn-outline-secondary btn-sm rounded-pill px-3">Edit</a>
+                        }
+
                         <a asp-action="Details" asp-route-id="@item.BookingId" class="btn btn-outline-info btn-sm rounded-pill px-3 mx-1">Details</a>
-                        <a asp-action="Delete" asp-route-id="@item.BookingId" class="btn btn-outline-danger btn-sm rounded-pill px-3">Delete</a>
+
+                        @if (!hasPassed)
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.BookingId" class="btn btn-outline-danger btn-sm rounded-pill px-3">Delete</a>
+                        }
                     </div>
                 </div>
             </div>
@@ -70,12 +124,13 @@
 
     @if (!Model.Any())
     {
-        <div class="text-center mt-5 text-muted">
-            <i class="bi bi-search fs-1"></i>
+        <div class="text-center mt-5 mb-5 text-muted">
+            <i class="bi bi-search" style="font-size: 3rem;"></i>
             <p class="mt-3 fs-5">No bookings found matching your search.</p>
-            <a asp-action="Index" class="btn btn-outline-info rounded-pill px-4">Show All Bookings</a>
+            <a asp-action="Index" class="btn btn-outline-info rounded-pill px-4">Clear Filters</a>
         </div>
     }
+
 </div>
 
 <style>
@@ -102,6 +157,7 @@
     .search-segment {
         border-radius: 50px;
         transition: background-color 0.2s ease;
+        cursor: pointer;
     }
 
         .search-segment:hover {
@@ -130,10 +186,34 @@
             background-color: #d11755;
         }
 
-    /* Removes the blue glow when typing in the "What" section */
+    /* Removes the blue glow when typing */
     .custom-search-input:focus {
         box-shadow: none !important;
         outline: none !important;
         background-color: transparent !important;
     }
 </style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const segments = document.querySelectorAll('.search-segment');
+
+        segments.forEach(segment => {
+            segment.addEventListener('click', function () {
+                const input = this.querySelector('input, select');
+
+                if (input) {
+                    input.focus();
+
+                    if (input.type === 'date' && typeof input.showPicker === 'function') {
+                        try {
+                            input.showPicker();
+                        } catch (error) {
+                            // Failsafe
+                        }
+                    }
+                }
+            });
+        });
+    });
+</script>

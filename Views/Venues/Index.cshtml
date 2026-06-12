@@ -28,7 +28,19 @@
                          alt="@item.VenueName"
                          style="height: 220px; object-fit: cover;">
                     <div class="card-body bg-white p-4">
-                        <h4 class="card-title fw-bold text-dark mb-2">@item.VenueName</h4>
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h4 class="card-title fw-bold text-dark mb-0">@item.VenueName</h4>
+                        </div>
+
+                        @if (item.IsAvailable)
+                        {
+                            <span class="badge bg-success rounded-pill mb-3"><i class="bi bi-check-circle me-1"></i> Available</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger rounded-pill mb-3"><i class="bi bi-x-circle me-1"></i> Unavailable</span>
+                        }
+
                         <p class="text-muted mb-3">
                             <i class="bi bi-geo-alt-fill text-danger me-1"></i> @item.Location
                         </p>

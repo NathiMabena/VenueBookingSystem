@@ -22,6 +22,13 @@ namespace VenueBookingSystem.Models
         [StringLength(120)]
         public string? ImageUrl { get; set; }
 
+        // --- NEW AVAILABILITY FIELD ---
+        [Display(Name = "Currently Available")]
+        public bool IsAvailable { get; set; } = true;
+        // ------------------------------
+
+      
+
         public ICollection<Event> Events { get; set; } = new List<Event>();
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
     }

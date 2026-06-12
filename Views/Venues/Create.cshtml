@@ -12,25 +12,38 @@
             <div class="card-body p-4 p-md-5 bg-white">
                 <form asp-action="Create" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
                     <div class="form-floating mb-3">
                         <input asp-for="VenueName" class="form-control rounded-3" placeholder="Venue Name" />
                         <label asp-for="VenueName">Venue Name</label>
                         <span asp-validation-for="VenueName" class="text-danger small"></span>
                     </div>
+
                     <div class="form-floating mb-3">
                         <input asp-for="Location" class="form-control rounded-3" placeholder="Location" />
                         <label asp-for="Location">Location / Address</label>
                         <span asp-validation-for="Location" class="text-danger small"></span>
                     </div>
+
                     <div class="form-floating mb-3">
                         <input asp-for="Capacity" class="form-control rounded-3" placeholder="Capacity" />
                         <label asp-for="Capacity">Maximum Capacity</label>
                         <span asp-validation-for="Capacity" class="text-danger small"></span>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Upload Venue Image (Optional)</label>
+
+                    <div class="mb-4 bg-light p-3 rounded-3 border">
+                        <label class="form-label fw-semibold text-dark">Venue Status</label>
+                        <div class="form-check form-switch fs-5">
+                            <input class="form-check-input" type="checkbox" role="switch" asp-for="IsAvailable" checked>
+                            <label class="form-check-label fs-6 text-muted ms-2" asp-for="IsAvailable">Currently open for new bookings</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 bg-light p-3 rounded-3 border">
+                        <label class="form-label fw-semibold text-dark">Upload Venue Image (Optional)</label>
                         <input type="file" name="imageFile" class="form-control rounded-3" accept="image/*" />
                     </div>
+
                     <div class="d-grid gap-2">
                         <input type="submit" value="Save Venue" class="btn btn-primary btn-lg rounded-pill fw-bold" />
                         <a asp-action="Index" class="btn btn-light btn-lg rounded-pill text-muted mt-2">Cancel</a>

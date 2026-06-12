@@ -41,16 +41,19 @@ namespace VenueBookingSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        // ADDED: IsAvailable to the Bind list so the server accepts the toggle switch data
         public async Task<IActionResult> Create(
-    [Bind("VenueId,VenueName,Location,Capacity")] Venue venue,
-    IFormFile? imageFile)
+            [Bind("VenueId,VenueName,Location,Capacity,IsAvailable")] Venue venue,
+            IFormFile? imageFile)
         {
             // Ignore optional/non-posted members during validation
             ModelState.Remove("ImageUrl");
             ModelState.Remove("Events");
             ModelState.Remove("Bookings");
+
             if (!ModelState.IsValid)
                 return View(venue);
+
             try
             {
                 if (imageFile != null && imageFile.Length > 0)
@@ -76,6 +79,7 @@ namespace VenueBookingSystem.Controllers
                     // No image selected -> use default placeholder
                     venue.ImageUrl = "https://via.placeholder.com/400x200?text=No+Image";
                 }
+
                 _context.Add(venue);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -86,6 +90,7 @@ namespace VenueBookingSystem.Controllers
                 return View(venue);
             }
         }
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -96,25 +101,30 @@ namespace VenueBookingSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        // ADDED: IsAvailable to the Bind list here as well
         public async Task<IActionResult> Edit(
-    int id,
-    [Bind("VenueId,VenueName,Location,Capacity,ImageUrl")] Venue venue,
-    IFormFile? imageFile)
+            int id,
+            [Bind("VenueId,VenueName,Location,Capacity,ImageUrl,IsAvailable")] Venue venue,
+            IFormFile? imageFile)
         {
             if (id != venue.VenueId)
                 return NotFound();
+
             // Remove navigation + optional field validation noise
             ModelState.Remove("Events");
             ModelState.Remove("Bookings");
             ModelState.Remove("ImageUrl");
+
             if (!ModelState.IsValid)
                 return View(venue);
+
             try
             {
                 // Always load current row so we can preserve existing image when no new file is uploaded
                 var existing = await _context.Venues.FirstOrDefaultAsync(v => v.VenueId == id);
                 if (existing == null)
                     return NotFound();
+
                 // Keep old image unless a real new file was uploaded
                 if (imageFile != null && imageFile.Length > 0)
                 {
@@ -134,10 +144,13 @@ namespace VenueBookingSystem.Controllers
                         return View(venue);
                     }
                 }
+
                 // Update editable fields
                 existing.VenueName = venue.VenueName;
                 existing.Location = venue.Location;
                 existing.Capacity = venue.Capacity;
+                existing.IsAvailable = venue.IsAvailable; // <-- ADDED: Actually saves the toggle switch to the DB
+
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -153,6 +166,7 @@ namespace VenueBookingSystem.Controllers
                 return View(venue);
             }
         }
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
